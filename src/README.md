@@ -1,6 +1,8 @@
-Control software
-====
+Serial Communication.
+the process of sending data one bit at a time, sequentially, over a communication channel or computer bus.
 
-This directory must contain code for control software which is used by the vehicle to participate in the competition and which was developed by the participants.
+The serial communication with the Raspberry Pi and the Arduino works this way:
 
-All artifacts required to resolve dependencies and build the project must be included in this directory as well.
+first the Arduino sensors detects the vehicle's rotation and the color in front of the sensor, after these values are captured, they are divided into arrays of bytes, then are sent to the raspberry pi through serial communication, then in the Raspberry, these arrays are again converted to normal values, float or integer.
+
+After this values are obtained they can be used to trigger functions in the vehicle, like changing direction, speeding up or slowing down. this serial communication between the arduino and the raspberry is key to the correct operation of the vehicle.
