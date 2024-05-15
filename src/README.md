@@ -1,4 +1,4 @@
-Serial Communication.
+# **Serial Communication**
 the process of sending data one bit at a time, sequentially, over a communication channel or computer bus.
 
 The serial communication with the Raspberry Pi and the Arduino works this way:
