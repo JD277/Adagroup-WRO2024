@@ -12,4 +12,4 @@ After this values are obtained they can be used to trigger functions in the vehi
 
 The sensors functions come from the libraries: **Arduino_BMI270_BMM150.h** and **Arduino_APDS9960.h**
 
-this functions are grouped into one * *Sensor* * class , that initializes both sensors, and has different methods for activating each one, the gyroscope, and the color sensor.
+this functions are grouped into one *Sensor* class , that initializes both sensors, and has different methods for activating each one, the gyroscope, and the color sensor.
