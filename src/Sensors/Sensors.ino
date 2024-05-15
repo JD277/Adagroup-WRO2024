@@ -24,25 +24,25 @@ class Sensors {
     return true;
   }
 
-  void leer_giroscopio() {
+  void leer_giroscopio(int _delay) {
     if (IMU.gyroscopeAvailable()) {
     IMU.readGyroscope(x, y, z);
   
     if(z < -threshold)
     {
     Serial.println("Collision left");
-    delay(500);
+    delay(_delay);
     }
     if(z > threshold)
     {
     Serial.println("Collision right");
-    delay(500);
+    delay(_delay);
     }
     }
     Serial.println();
   }
 
-  void leer_color() {
+  void leer_color(int _delay) {
     // check if a color reading is available
     while (! APDS.colorAvailable()) {
       delay(5);
@@ -52,6 +52,7 @@ class Sensors {
     APDS.readColor(r, g, b);
 
     // print the values
+    
     Serial.print("Red light = ");
     Serial.println(r);
     Serial.print("Green light = ");
@@ -59,9 +60,9 @@ class Sensors {
     Serial.print("Blue light = ");
     Serial.println(b);
     Serial.println();
-
+    
     // wait a bit before reading again
-    delay(500);
+    delay(_delay);
   }
 };
 
