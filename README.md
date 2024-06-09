@@ -61,13 +61,13 @@ The getDistance() method perform the following steps to measure the distance to 
  
 ### Motors
 
-The `DC Motor` together the `L298N` function with 4 methods: 
+The `DC Motor` together the `L298N` functions with 4 methods: 
   * `InitMotor()` Set up the L298N 'IN' pins as output pins.
   * `GoForward()` Power up the DC motor to go forward.
   * `GoBackward()` Power up the DC motor to go backward.
   * `Stop()` Power off the DC Motor to stop.
 
-The `Servo Motor` function with 3 methods:
+The `Servo Motor` functions with 3 methods:
   * `GoRight()` Set up the Servo angle to 45°.
   * `GoLeft()` Set up the Servo angle to 135°.
   * `Gofront()` Set up the Servo angle to 0°.
