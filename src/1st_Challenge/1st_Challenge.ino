@@ -1,7 +1,6 @@
 // --------------------libraries------------------------
 // Gyroscope lib
 #include "Arduino_BMI270_BMM150.h"
-
 // Color sensor lib
 #include "Arduino_APDS9960.h"
 // Servomotor lib
