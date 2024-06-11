@@ -37,7 +37,13 @@ The getDistance() method perform the following steps to measure the distance to 
 * **3. Calculate the distance:**
   * Multiply the pulse time by the speed of sound to calculate the total distance traveled by the ultrasonic pulse.
   * Divide the total distance by 2 to get the distance to the object, because the pulse travels the distance 2 times.
- 
+    
+ ![distance](https://github.com/JD277/Adagroup-WRO2024/assets/110682430/89a4d62f-6201-47c3-95a5-daa25443ac2a)
+
+
+![distance2](https://github.com/JD277/Adagroup-WRO2024/assets/110682430/4a763c03-c8a6-4988-8eb7-e5dd558557d7)
+
+
 `ImuAndAdps` This class is utilized to read data from the inertial sensor (IMU) and the color sensor (APDS) from the `Arduino Nano BLE 33 Sense Rev2`.
 
 * **1. Class Properties:**
