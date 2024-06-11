@@ -71,9 +71,3 @@ The `Servo Motor` functions with 3 methods:
   * `GoRight()` Set up the Servo angle to 45°.
   * `GoLeft()` Set up the Servo angle to 135°.
   * `Gofront()` Set up the Servo angle to 0°.
-
-To Start sensing color with the Nano BLE 33 sense you must have to install Arduino_APDS9960 and for the gyroscope you have to install Arduino_BMI270_BMM150, with that you can be able to use our code, However, the code is not ready you just have two skecth for each sensor.
-
-And other file to comunicate the Arduino with the Raspberry PI 5
-
-
