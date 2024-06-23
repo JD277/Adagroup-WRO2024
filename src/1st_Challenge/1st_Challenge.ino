@@ -1,3 +1,4 @@
+
 // --------------------libraries------------------------
 // Gyroscope lib
 #include "Arduino_BMI270_BMM150.h"
@@ -12,22 +13,21 @@
 #define SND_T 0.017
 // Constant of the car's speed 
 #define VEL 128
-// color corrections
-static const float RedCorrection = 227.0 / 48;
-static const float GreenCorrection = 182.0 / 47;
-static const float BlueCorrection = 245.0 / 48;
 // --------------------Constants------------------------
 
 // Servo instance
 Servo servomotor;
+int servopin = 2;
 
 // Line counters
-int orange_count = 0;
-int blue_count = 0;
+int cornerl = 0;
+int cornerr = 0;
 
 // Motors pins
 int IN3 = A0;
 int IN4 = A1;
+int speed = A3;
+int lowspeed = 500;
 
 //Start button pin
 int button_pin = A2;
@@ -56,13 +56,14 @@ class distanceSensor
     float time,dist;
     
     digitalWrite(trigger, HIGH);
+    delayMicroseconds(10);
     digitalWrite(trigger, LOW);
 
     time = pulseIn(echo, HIGH);
 
     dist = time * SND_T;
 
-    return dist;
+    return int(dist);
     
   }
   
@@ -87,8 +88,7 @@ class imuAndApds {
     pinMode(LEDR, OUTPUT);
     pinMode(LEDG, OUTPUT);
     pinMode(LEDB, OUTPUT);
-    
-    //Serial.println("Started");
+
     
     if (!APDS.begin()) {
       Serial.println("Failed to initialize APDS!");
@@ -104,9 +104,9 @@ class imuAndApds {
     //delay(5);
   }
   //turn on LED light
-  digitalWrite(LEDR, LOW);
-  digitalWrite(LEDG, LOW);
-  digitalWrite(LEDB, LOW);
+  digitalWrite(LEDR, HIGH);
+  digitalWrite(LEDG, HIGH);
+  digitalWrite(LEDB, HIGH);
   
   APDS.readColor(r, g, b);
 
@@ -124,29 +124,38 @@ void initMotor() {
 
 
 void goForward() {
-  analogWrite(IN3, VEL);
-  analogWrite(IN4, 0);
+  analogWrite(IN4, VEL);
+  analogWrite(IN3, 0);
+  analogWrite(speed, lowspeed);
 }
 
 void goBackward() {
-  analogWrite(IN3, 0);
-  analogWrite(IN4, VEL);
+  analogWrite(IN4, 0);
+  analogWrite(IN3, VEL);
+  analogWrite(speed, lowspeed);
 }
 
 void stop() {
-  analogWrite(IN3, 0);
   analogWrite(IN4, 0);
+  analogWrite(IN3, 0);
 }
 
 void goLeft() {
-  servomotor.write(135);
+  servomotor.write(45);
+  delay(100);
+  digitalWrite(servopin,0);
+  
 } 
 
 void goRight() {
-  servomotor.write(45);
+  servomotor.write(135);
+  delay(100);
+  digitalWrite(servopin,0);
 }
 void goFront() {
-  servomotor.write(0);
+  servomotor.write(90);
+  delay(100);
+  digitalWrite(servopin,0);
 }
 
 
@@ -163,69 +172,81 @@ bool run = false;
 bool checkColor = false;
 void setup() {
   Serial.begin(9600);
-
+  front.init();
+  right.init();
+  left.init();
+  back.init();
   imuColor.init();
   pinMode(button_pin, INPUT);
-  servomotor.attach(4);
+  pinMode(speed, OUTPUT);
+  servomotor.attach(servopin);
 
 }
 
-//pista_azul = [13,77,161]
-//pista_naranja = [245,130,32]
+
 void loop() {
-  imuColor.ReadColor();
-  // Getting the RGB code from nano's the lecture 
-  int r = imuColor.r;
-  int g = imuColor.g;
-  int b = imuColor.b;
+
 
   // Start statement
-  (digitalRead(button_pin) == 0)? run = true;
-  
+  if (analogRead(button_pin) > 140){run = true;}
   // When the start button is pressed
-
-  if (run){
-    goForward();
-    // measuring the difference from both distances 
-    int left = left.GetDistance();
-    int right = right.GetDistance();
-    int diference;
-    (left - right < 0)? diference = (left - right) * (-1) : diference = left - right;
-    // While the car is on
-    if (front.GetDistance() > 80) {
-      if (diference >= 36){
-        if (left > right){
-          goLeft();
-          delay(500);
-          goFront();
-
-        } else if (left < right) {
-          goRight();
-          delay(500);
-          goFront();
-        }
-      }
-    } else if (front.GetDistance() < 80 && checkColor == true) {
-        goFront();
-        if ((r-g) > 40 && (r-b) > 40) {
-          //Serial.println("naranja detectado");
-          goRight();
-          orange_count ++;
-          checkColor = false;
-        } else if ((b-r) > 34 && (b-g) > 34) {
-          //Serial.println("azul detectado");
-          goLeft();
-          blue_count ++;
-          checkColor = false;
-
-    }
-  }
   
-  if (orange_count >= 12 || blue_count >= 12) {
-    delay(1000);
-    stop();
-  }
-  };
+    Serial.print("Front: ");
+    Serial.print(front.getDistance());
+    Serial.print(" Left: ");
+    Serial.print(left.getDistance());
+    Serial.print(" Right: ");
+    Serial.print(right.getDistance());
+    Serial.println(" ");
+    
+    // While the car is on
+    if (run) {
+      
+      goForward();
+
+    
+    //measuring the difference from both distances 
+    int leftd = left.getDistance();
+    int rightd = right.getDistance();
+    int diference = abs(leftd -rightd);
+    
+    
+    //
+    if (front.getDistance() >= 100) {
+        goFront();
+
+        //difference between walls
+      if (diference >= 36){
+        
+        if (leftd > rightd){
+          goLeft();
+          delay(500);
+
+        }else if (leftd < rightd) {
+          goRight();
+          delay(500);
+          }
+        }
+        }
+        //large section detections
+        else if (leftd >= 100 && front.getDistance() < 100 && cornerr == 0){
+        goLeft();
+        cornerl += 1;
+        delay(500);
+      } 
+      else if (rightd >= 100 && front.getDistance() < 100 && cornerl == 0){
+        goRight();
+        cornerr += 1;
+        delay(500);
+      }
+      //stops at last lap
+      if (cornerr >= 12 || cornerl >= 12) {
+        delay(600);
+        run = false;
+        stop();
+      }
+    } 
+    delay(500);
   }
 
   
