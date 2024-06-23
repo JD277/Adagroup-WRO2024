@@ -1,37 +1,29 @@
 START
-INT orange_counter = 0
-INT blue_counter = 0
 INT left_distance = 0
 INT right_distance = 0
-INT check_color = 0
-INT red = 0
-INT blue = 0
-INT green = 0
+BOOL button_is_pressed = FALSE
+BOOL start = FALSE
 
-GOFORWARD()
 
-IF left_distance - right_distance <= 36  THEN
-    IF left_distance > right_distance THEN
-        GOLEFT()
-    ELSE IF left_distance < right_distance THEN
-        GORIGHT()
+IF button_is_pressed THEN
+    start = true
+END IF
+
+WHILE start == true THEN
+    GOFORWARD()
+
+
+    IF left_distance - right_distance <= 36  THEN
+        IF left_distance > right_distance THEN
+            GOLEFT()
+        ELSE IF left_distance < right_distance THEN
+            GORIGHT()
+        END IF
     END IF
-END IF
 
-IF check_color == true THEN
-    GOFRONT()
 
-    IF (red - green) > than 40 and (red - green) > 40 THEN
-        GORIGHT()
-        orange_counter = orange_counter + 1
-        check_color = FALSE
-    ELSE IF (blue - red) > 34 and (blue - green) > 34 THEN
-        GOLEFT()
-        blue_counter = blue_counter + 1
-        check_color = FALSE
+    IF section_counter >= 12 THEN
+    STOP()
     END IF
-END IF
 
-IF orange_counter >= 12 or blue_counter >= 12 THEN
-STOP()
-END IF
+END WHILE
